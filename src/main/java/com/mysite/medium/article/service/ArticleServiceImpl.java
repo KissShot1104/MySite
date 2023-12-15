@@ -28,7 +28,6 @@ public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
     private final UserService userService;
-    private final CommentService commentService;
 
     public Page<ArticleDto> getArticleAll(int page, String kw) {
     	List<Sort.Order> sorts = new ArrayList<>();
@@ -36,13 +35,6 @@ public class ArticleServiceImpl implements ArticleService {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return this.articleRepository.findAllByKeyword(kw, pageable);
     }
-
-
-
-
-    ///////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////
 
     public ArticleDto findArticleByArticleId(Long id) {
         Optional<Article> article = this.articleRepository.findById(id);
@@ -52,8 +44,6 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         SiteUserDto authorForm = userService.siteUserToSiteUserForm(article.get().getAuthor());
-
-
 
         return ArticleDto.builder()
                 .id(article.get().getId())
@@ -70,12 +60,13 @@ public class ArticleServiceImpl implements ArticleService {
 
         SiteUser siteUser = userService.siteUserFormToSiteUser(siteUserDto);
 
-        Article q = Article.builder()
+        Article article = Article.builder()
                 .subject(articleDto.getSubject())
                 .content(articleDto.getContent())
                 .author(siteUser)
                 .build();
-        this.articleRepository.save(q);
+
+        this.articleRepository.save(article);
     }
 
     @Transactional
@@ -88,7 +79,6 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         article.get().modifyArticle(articleDto);
-
     }
     
     public void deleteArticle(Long articleId) {
@@ -111,15 +101,11 @@ public class ArticleServiceImpl implements ArticleService {
             throw new DataNotFoundException("article not found");
         }
 
-        SiteUser siteUser = userService.siteUserFormToSiteUser(siteUserDto);
-
-//        articlie.get().getVoter().add(siteUser);
-
         this.articleRepository.save(articlie.get());
     }
 
     public ArticleDto articleToArticleDto(Article article) {
-        return ArticleDto.builder()
+        ArticleDto articleDto = ArticleDto.builder()
                 .id(article.getId())
                 .subject(article.getSubject())
                 .content(article.getContent())
@@ -128,6 +114,7 @@ public class ArticleServiceImpl implements ArticleService {
                 .author(userService.siteUserToSiteUserForm(article.getAuthor()))
                 .build();
 
+        return articleDto;
     }
 
 }
