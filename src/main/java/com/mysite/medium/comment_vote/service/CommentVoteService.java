@@ -9,9 +9,9 @@ import java.util.Map;
 public interface CommentVoteService {
     void toggleCommentVote(final Long commentId, final String username);
     void createCommentVote(final Comment comment, final SiteUser user);
-    void deleteCommentVoteAllByCommentId(Long commentId);
-    void deleteCommentVoteAllByArticleId(Long articleId);
-    CommentVoteDto articleVoteToArticleVoteDto(CommentVote commentVote);
+    void deleteCommentVoteAllByCommentId(final Long commentId);
+    void deleteCommentVoteAllByArticleId(final Long articleId);
+    CommentVoteDto articleVoteToArticleVoteDto(final CommentVote commentVote);
 
-    Map<Long, Long> getCommentLikesForArticle(Long articleId);
+    Map<Long, Long> getCommentLikesForArticle(final Long articleId);
 }

@@ -6,11 +6,11 @@ import com.mysite.medium.user.entity.SiteUser;
 
 public interface UserService {
 
-    public void createUser(UserCreateDto userCreateDto);
+    void createUser(final UserCreateDto userCreateDto);
 
-    public SiteUserDto getUser(String username);
+    SiteUserDto getUser(final String username);
 
-    public SiteUser siteUserDtoToSiteUser(SiteUserDto siteUserDto);
+    SiteUser siteUserDtoToSiteUser(final SiteUserDto siteUserDto);
 
-    public SiteUserDto siteUserToSiteUserDto(SiteUser siteUser);
+    SiteUserDto siteUserToSiteUserDto(final SiteUser siteUser);
 }

@@ -74,11 +74,11 @@ public class CommentVoteServiceImpl implements CommentVoteService {
     
 
     public Map<Long, Long> getCommentLikesForArticle(final Long articleId) {//article 생겼으니 다시 생각해보자
-        List<Comment> comments = commentRepository.findAllByArticleId(articleId);
-        Map<Long, Long> commentDtoLikes = new HashMap<>();
+        final List<Comment> comments = commentRepository.findAllByArticleId(articleId);
+        final Map<Long, Long> commentDtoLikes = new HashMap<>();
         for (Comment comment: comments) {
-            Long voteCount = commentVoteRepository.countByCommentId(comment.getId());
-            CommentDto commentDto = commentService.commentToCommentDto(comment);
+            final Long voteCount = commentVoteRepository.countByCommentId(comment.getId());
+            final CommentDto commentDto = commentService.commentToCommentDto(comment);
             commentDtoLikes.put(commentDto.getId(), voteCount);
         }
         return commentDtoLikes;

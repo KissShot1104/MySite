@@ -22,9 +22,9 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void createUser(UserCreateDto userCreateDto) {
+    public void createUser(final UserCreateDto userCreateDto) {
 
-        SiteUser user = SiteUser.builder()
+        final SiteUser user = SiteUser.builder()
                 .username(userCreateDto.getUsername())
                 .email(userCreateDto.getEmail())
                 .password(passwordEncoder.encode(userCreateDto.getPassword1()))
@@ -33,14 +33,14 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
     
-    public SiteUserDto getUser(String username) {
-        Optional<SiteUser> siteUser = this.userRepository.findByUsername(username);
+    public SiteUserDto getUser(final String username) {
+        final Optional<SiteUser> siteUser = this.userRepository.findByUsername(username);
 
         if (siteUser.isEmpty()) {
             throw new DataNotFoundException("siteuser not found");
         }
 
-        SiteUserDto siteUserDto = siteUserToSiteUserDto(siteUser.get());
+        final SiteUserDto siteUserDto = siteUserToSiteUserDto(siteUser.get());
 
         return siteUserDto;
     }
