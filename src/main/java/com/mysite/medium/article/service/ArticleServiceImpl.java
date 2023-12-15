@@ -84,18 +84,6 @@ public class ArticleServiceImpl implements ArticleService {
         this.articleRepository.delete(article.get());
     }
 
-    @Transactional
-    public void voteArticle(final Long articleId, final SiteUserDto siteUserDto) {
-
-        final Optional<Article> article = articleRepository.findById(articleId);
-
-        if (article.isEmpty()) {
-            throw new DataNotFoundException("article not found");
-        }
-
-        this.articleRepository.save(article.get());
-    }
-
     public ArticleDto articleToArticleDto(final Article article) {
         final ArticleDto articleDto = ArticleDto.builder()
                 .id(article.getId())
