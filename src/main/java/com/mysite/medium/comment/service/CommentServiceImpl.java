@@ -4,6 +4,7 @@ import com.mysite.medium.comment.dto.CommentDto;
 import com.mysite.medium.comment.entity.Comment;
 import com.mysite.medium.comment.repository.CommentRepository;
 import com.mysite.medium.user.dto.SiteUserDto;
+import com.mysite.medium.user.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +32,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userService;
     private final UserRepository userRepository;
 
     public Page<CommentDto> findCommentAllByArticleId(int page, Long id) {
@@ -48,7 +49,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = Comment.builder()
                 .content(commentDto.getContent())
                 .article(article.get())
-                .author(userServiceImpl.siteUserFormToSiteUser(author))
+                .author(userService.siteUserFormToSiteUser(author))
                 .build();
 
         this.commentRepository.save(comment);
@@ -63,7 +64,7 @@ public class CommentServiceImpl implements CommentService {
             throw new DataNotFoundException("comment not found");
         }
 
-        SiteUserDto siteUser = userServiceImpl.siteUserToSiteUserForm(comment.get().getAuthor());
+        SiteUserDto siteUser = userService.siteUserToSiteUserForm(comment.get().getAuthor());
 
         return CommentDto.builder()
                 .id(comment.get().getId())
@@ -110,7 +111,7 @@ public class CommentServiceImpl implements CommentService {
 
 
     public Comment commentDtoToComment(CommentDto commentDto) {
-        SiteUser author = userServiceImpl.siteUserFormToSiteUser(commentDto.getAuthor());
+        SiteUser author = userService.siteUserFormToSiteUser(commentDto.getAuthor());
 
         return Comment.builder()
                 .id(commentDto.getId())
@@ -122,7 +123,7 @@ public class CommentServiceImpl implements CommentService {
 
     public CommentDto commentToCommentDto(Comment comment) {
 
-        SiteUserDto author = userServiceImpl.siteUserToSiteUserForm(comment.getAuthor());
+        SiteUserDto author = userService.siteUserToSiteUserForm(comment.getAuthor());
 
         return CommentDto.builder()
                 .id(comment.getId())
