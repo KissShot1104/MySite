@@ -7,6 +7,7 @@ import java.util.Map;
 public interface CommentVoteService {
     void createCommentVote(final Long commentId, final String username);
     void deleteCommentVoteAllByCommentId(Long commentId);
+    void deleteCommentVoteAllByArticleId(Long articleId);
     CommentVoteDto articleVoteToArticleVoteDto(CommentVote commentVote);
 
     Map<Long, Long> getCommentLikesForArticle(Long articleId);

@@ -3,7 +3,6 @@ package com.mysite.medium.article.service;
 import com.mysite.medium.article.entity.Article;
 import com.mysite.medium.article.dto.ArticleDto;
 import com.mysite.medium.article.repository.ArticleRepository;
-import com.mysite.medium.comment.service.CommentService;
 import com.mysite.medium.user.dto.SiteUserDto;
 import com.mysite.medium.user.service.UserService;
 import java.util.ArrayList;
@@ -49,11 +48,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Transactional
-    public void createArticle(ArticleDto articleDto, SiteUserDto siteUserDto) {
+    public void createArticle(final ArticleDto articleDto, final SiteUserDto siteUserDto) {
 
-        SiteUser siteUser = userService.siteUserFormToSiteUser(siteUserDto);
+        final SiteUser siteUser = userService.siteUserFormToSiteUser(siteUserDto);
 
-        Article article = Article.builder()
+        Article article = Article.builder()//수정 바람
                 .subject(articleDto.getSubject())
                 .content(articleDto.getContent())
                 .author(siteUser)
@@ -63,9 +62,9 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Transactional
-    public void modifyArticle(Long articleId, ArticleDto articleDto) {
+    public void modifyArticle(final Long articleId, final ArticleDto articleDto) {
 
-        Optional<Article> article = articleRepository.findById(articleId);
+        final Optional<Article> article = articleRepository.findById(articleId);
 
         if (article.isEmpty()) {
             throw new DataNotFoundException("article not found");
@@ -74,9 +73,9 @@ public class ArticleServiceImpl implements ArticleService {
         article.get().modifyArticle(articleDto);
     }
     
-    public void deleteArticle(Long articleId) {
+    public void deleteArticle(final Long articleId) {
 
-        Optional<Article> article = articleRepository.findById(articleId);
+        final Optional<Article> article = articleRepository.findById(articleId);
 
         if (article.isEmpty()) {
             throw new DataNotFoundException("article not found");
@@ -86,19 +85,19 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Transactional
-    public void voteArticle(Long articleId, SiteUserDto siteUserDto) {
+    public void voteArticle(final Long articleId, final SiteUserDto siteUserDto) {
 
-        Optional<Article> articlie = articleRepository.findById(articleId);
+        final Optional<Article> article = articleRepository.findById(articleId);
 
-        if (articlie.isEmpty()) {
+        if (article.isEmpty()) {
             throw new DataNotFoundException("article not found");
         }
 
-        this.articleRepository.save(articlie.get());
+        this.articleRepository.save(article.get());
     }
 
-    public ArticleDto articleToArticleDto(Article article) {
-        ArticleDto articleDto = ArticleDto.builder()
+    public ArticleDto articleToArticleDto(final Article article) {
+        final ArticleDto articleDto = ArticleDto.builder()
                 .id(article.getId())
                 .subject(article.getSubject())
                 .content(article.getContent())

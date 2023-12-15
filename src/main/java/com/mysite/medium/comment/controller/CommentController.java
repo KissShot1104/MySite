@@ -4,6 +4,8 @@ import com.mysite.medium.article.dto.ArticleDto;
 import com.mysite.medium.article.service.ArticleService;
 import com.mysite.medium.comment.dto.CommentDto;
 import com.mysite.medium.comment.service.CommentService;
+import com.mysite.medium.comment_vote.entity.CommentVote;
+import com.mysite.medium.comment_vote.service.CommentVoteService;
 import com.mysite.medium.user.dto.SiteUserDto;
 import com.mysite.medium.user.service.UserService;
 import java.security.Principal;
@@ -30,6 +32,7 @@ public class CommentController {
     private final ArticleService articleService;
     private final CommentService commentService;
     private final UserService userService;
+    private final CommentVoteService commentVoteService;
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create/{articleId}")
@@ -98,7 +101,7 @@ public class CommentController {
         if (!commentDto.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
-
+        commentVoteService.deleteCommentVoteAllByCommentId(commentId);
         commentService.deleteComment(commentId);
 
         return String.format("redirect:/article/%s", commentDto.getArticle().getId());
