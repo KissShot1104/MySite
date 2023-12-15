@@ -44,7 +44,7 @@ public class ArticleVoteServiceImpl implements ArticleVoteService {
         if (articleVote.isEmpty()) {
             createArticleVote(article.get(), user.get());
         } else {
-            deleteArticleVote(articleVote.get());
+            deleteArticleVoteByArticleVote(articleVote.get());
         }
     }
 
@@ -57,7 +57,7 @@ public class ArticleVoteServiceImpl implements ArticleVoteService {
         articleVoteRepository.save(articleVote);
     }
 
-    private void deleteArticleVote(ArticleVote articleVote) {
+    private void deleteArticleVoteByArticleVote(ArticleVote articleVote) {
         articleVoteRepository.delete(articleVote);
     }
 
