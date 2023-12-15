@@ -7,19 +7,19 @@ import org.springframework.data.domain.Page;
 
 public interface CommentService {
 
-    Long createComment(Long articleId, CommentDto commentDto, SiteUserDto author);
+    Long createComment(final Long articleId, final CommentDto commentDto, final SiteUserDto author);
 
-    Page<CommentDto> findCommentAllByArticleId(int page, Long id);
+    Page<CommentDto> findCommentAllByArticleId(final int page, final Long id);
 
-    CommentDto findCommentByCommendId(Long commentId);
+    CommentDto findCommentByCommendId(final Long commentId);
 
-    void modifyComment(Long commentId , CommentDto commentDto);
+    void modifyComment(final Long commentId , final CommentDto commentDto);
 
-    void deleteComment(Long commentId);
+    void deleteComment(final Long commentId);
 
-    void deleteAllByArticleId(Long articleId);
+    void deleteAllByArticleId(final Long articleId);
 
-    Comment commentDtoToComment(CommentDto commentDto);
+    Comment commentDtoToComment(final CommentDto commentDto);
 
-    CommentDto commentToCommentDto(Comment comment);
+    CommentDto commentToCommentDto(final Comment comment);
 }

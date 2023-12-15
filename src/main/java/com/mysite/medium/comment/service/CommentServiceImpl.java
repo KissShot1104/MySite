@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.mysite.medium.article.repository.ArticleRepository;
-import com.mysite.medium.user.repository.UserRepository;
-import com.mysite.medium.user.service.UserServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,10 +33,12 @@ public class CommentServiceImpl implements CommentService {
     private final UserService userService;
 
     public Page<CommentDto> findCommentAllByArticleId(final int page, final Long id) {
-        List<Order> sorts = new ArrayList<>();
+        final List<Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
-        Pageable pageable = PageRequest.of(page, 5, Sort.by(sorts));
-        return this.commentRepository.findCommentAll(pageable, id);
+        final Pageable pageable = PageRequest.of(page, 5, Sort.by(sorts));
+        final Page<CommentDto> commentPaging = this.commentRepository.findCommentAll(pageable, id);
+
+        return commentPaging;
     }
 
     public Long createComment(final Long articleId, final CommentDto commentDto, final SiteUserDto author) {
@@ -95,9 +95,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     public Comment commentDtoToComment(final CommentDto commentDto) {
-        SiteUser author = userService.siteUserDtoToSiteUser(commentDto.getAuthor());
+        final SiteUser author = userService.siteUserDtoToSiteUser(commentDto.getAuthor());
 
-        Comment comment = Comment.builder()
+        final Comment comment = Comment.builder()
                 .id(commentDto.getId())
                 .content(commentDto.getContent())
                 .article(commentDto.getArticle())
@@ -111,7 +111,7 @@ public class CommentServiceImpl implements CommentService {
 
         final SiteUserDto author = userService.siteUserToSiteUserDto(comment.getAuthor());
 
-        CommentDto commentDto = CommentDto.builder()
+        final CommentDto commentDto = CommentDto.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
                 .article(comment.getArticle())
