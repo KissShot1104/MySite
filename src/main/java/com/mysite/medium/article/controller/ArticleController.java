@@ -40,11 +40,6 @@ public class ArticleController {
     private final ArticleVoteService articleVoteService;
     private final CommentVoteService commentVoteService;
 
-    @GetMapping("/")
-    public String root() {
-        return "redirect:/article/list";
-    }
-
     @GetMapping("/list")
     public String listArticles(Model model,
                                @RequestParam(value = "page", defaultValue = "0") int page,
@@ -63,7 +58,7 @@ public class ArticleController {
         ArticleDto articleDto = articleService.findArticleByArticleId(articleId);
         Page<CommentDto> pagingComment = commentService.findCommentAllByArticleId(page, articleId);
         List<ArticleVoteDto> articleVoteDtos = articleVoteService.findArticleVoterAllByArticleId(articleId);
-        Map<Long, Long> commentVoteDtos = commentVoteService.getCommentLikesForArticle(articleId);
+        Map<Long, Long> commentVoteDtos = commentVoteService.getCommentLikesForArticle(articleId);//변수 이름 수정 바람
 
         model.addAttribute("article", articleDto);
         model.addAttribute("paging", pagingComment);
