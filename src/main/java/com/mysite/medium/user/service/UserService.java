@@ -10,7 +10,7 @@ public interface UserService {
 
     public SiteUserDto getUser(String username);
 
-    public SiteUser siteUserFormToSiteUser(SiteUserDto siteUserDto);
+    public SiteUser siteUserDtoToSiteUser(SiteUserDto siteUserDto);
 
-    public SiteUserDto siteUserToSiteUserForm(SiteUser siteUser);
+    public SiteUserDto siteUserToSiteUserDto(SiteUser siteUser);
 }

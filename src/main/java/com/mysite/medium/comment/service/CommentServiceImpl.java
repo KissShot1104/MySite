@@ -33,23 +33,22 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
     private final UserService userService;
-    private final UserRepository userRepository;
 
-    public Page<CommentDto> findCommentAllByArticleId(int page, Long id) {
+    public Page<CommentDto> findCommentAllByArticleId(final int page, final Long id) {
         List<Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
         Pageable pageable = PageRequest.of(page, 5, Sort.by(sorts));
         return this.commentRepository.findCommentAll(pageable, id);
     }
 
-    public Long createComment(Long articleId, CommentDto commentDto, SiteUserDto author) {
+    public Long createComment(final Long articleId, final CommentDto commentDto, final SiteUserDto author) {
 
-        Optional<Article> article = articleRepository.findById(articleId);
+        final Optional<Article> article = articleRepository.findById(articleId);
 
-        Comment comment = Comment.builder()
+        final Comment comment = Comment.builder()
                 .content(commentDto.getContent())
                 .article(article.get())
-                .author(userService.siteUserFormToSiteUser(author))
+                .author(userService.siteUserDtoToSiteUser(author))
                 .build();
 
         this.commentRepository.save(comment);
@@ -57,26 +56,19 @@ public class CommentServiceImpl implements CommentService {
         return comment.getId();
     }
     
-    public CommentDto getComment(Long id) {
-        Optional<Comment> comment = this.commentRepository.findById(id);
+    public CommentDto findCommentByCommendId(final Long commentId) {
+        final Optional<Comment> comment = this.commentRepository.findById(commentId);
 
         if (comment.isEmpty()) {
             throw new DataNotFoundException("comment not found");
         }
 
-        SiteUserDto siteUser = userService.siteUserToSiteUserForm(comment.get().getAuthor());
-
-        return CommentDto.builder()
-                .id(comment.get().getId())
-                .content(comment.get().getContent())
-                .article(comment.get().getArticle())
-                .author(siteUser)
-                .build();
+        return commentToCommentDto(comment.get());
     }
 
     @Transactional
-    public void modifyComment(Long commentId , CommentDto commentDto) {
-        Optional<Comment> comment = commentRepository.findById(commentId);
+    public void modifyComment(final Long commentId , final CommentDto commentDto) {
+        final Optional<Comment> comment = commentRepository.findById(commentId);
 
         if (comment.isEmpty()) {
             throw new DataNotFoundException("Not Found Comment");
@@ -86,9 +78,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long commentId) {
+    public void deleteComment(final Long commentId) {
 
-        Optional<Comment> comment = commentRepository.findById(commentId);
+        final Optional<Comment> comment = commentRepository.findById(commentId);
 
         if (comment.isEmpty()) {
             throw new DataNotFoundException("Not Found Comment");
@@ -98,34 +90,28 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Transactional
-    public void deleteAllByArticleId(Long articleId) {
+    public void deleteAllByArticleId(final Long articleId) {
         this.commentRepository.deleteAllByArticleId(articleId);
     }
-    
-    public void vote(CommentDto commentDto, SiteUserDto siteUserDto) {
 
-        Comment comment = commentDtoToComment(commentDto);
+    public Comment commentDtoToComment(final CommentDto commentDto) {
+        SiteUser author = userService.siteUserDtoToSiteUser(commentDto.getAuthor());
 
-        this.commentRepository.save(comment);
-    }
-
-
-    public Comment commentDtoToComment(CommentDto commentDto) {
-        SiteUser author = userService.siteUserFormToSiteUser(commentDto.getAuthor());
-
-        return Comment.builder()
+        Comment comment = Comment.builder()
                 .id(commentDto.getId())
                 .content(commentDto.getContent())
                 .article(commentDto.getArticle())
                 .author(author)
                 .build();
+
+        return comment;
     }
 
-    public CommentDto commentToCommentDto(Comment comment) {
+    public CommentDto commentToCommentDto(final Comment comment) {
 
-        SiteUserDto author = userService.siteUserToSiteUserForm(comment.getAuthor());
+        final SiteUserDto author = userService.siteUserToSiteUserDto(comment.getAuthor());
 
-        return CommentDto.builder()
+        CommentDto commentDto = CommentDto.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
                 .article(comment.getArticle())
@@ -133,6 +119,8 @@ public class CommentServiceImpl implements CommentService {
                 .modifyDate(comment.getModifyDate())
                 .author(author)
                 .build();
+
+        return commentDto;
     }
 
 }

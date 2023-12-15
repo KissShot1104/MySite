@@ -34,17 +34,17 @@ public class CommentVoteServiceImpl implements CommentVoteService {
 
     @Transactional
     public void toggleCommentVote(final Long commentId, final String username) {
-        Optional<Comment> comment = commentRepository.findById(commentId);
+        final Optional<Comment> comment = commentRepository.findById(commentId);
         if (comment.isEmpty()) {
             throw new EntityNotFoundException("Comment Entity Not Found");
         }
 
-        Optional<SiteUser> user = userRepository.findByUsername(username);
+        final Optional<SiteUser> user = userRepository.findByUsername(username);
         if (user.isEmpty()) {
             throw new EntityNotFoundException("User Entity Not Found");
         }
 
-        Optional<CommentVote> commentVote = commentVoteRepository.findByCommentIdAndUserId(commentId, user.get().getId());
+        final Optional<CommentVote> commentVote = commentVoteRepository.findByCommentIdAndUserId(commentId, user.get().getId());
         if (commentVote.isEmpty()) {
             createCommentVote(comment.get(), user.get());
         } else {
@@ -53,7 +53,7 @@ public class CommentVoteServiceImpl implements CommentVoteService {
     }
 
     public void createCommentVote(final Comment comment, final SiteUser user) {
-        CommentVote commentVote = CommentVote.builder()
+        final CommentVote commentVote = CommentVote.builder()
                 .article(comment.getArticle())
                 .comment(comment)
                 .user(user)
@@ -63,17 +63,17 @@ public class CommentVoteServiceImpl implements CommentVoteService {
     }
 
     @Transactional
-    public void deleteCommentVoteAllByCommentId(Long commentId) {
+    public void deleteCommentVoteAllByCommentId(final Long commentId) {
         commentVoteRepository.deleteCommentVoteAllByCommentId(commentId);
     }
 
     @Transactional
-    public void deleteCommentVoteAllByArticleId(Long articleId) {
+    public void deleteCommentVoteAllByArticleId(final Long articleId) {
         commentVoteRepository.deleteAllByArticleId(articleId);
     }
     
 
-    public Map<Long, Long> getCommentLikesForArticle(Long articleId) {//article 생겼으니 다시 생각해보자
+    public Map<Long, Long> getCommentLikesForArticle(final Long articleId) {//article 생겼으니 다시 생각해보자
         List<Comment> comments = commentRepository.findAllByArticleId(articleId);
         Map<Long, Long> commentDtoLikes = new HashMap<>();
         for (Comment comment: comments) {
@@ -84,12 +84,15 @@ public class CommentVoteServiceImpl implements CommentVoteService {
         return commentDtoLikes;
     }
 
-    public CommentVoteDto articleVoteToArticleVoteDto(CommentVote commentVote) {
-        return CommentVoteDto.builder()
+    public CommentVoteDto articleVoteToArticleVoteDto(final CommentVote commentVote) {
+
+        final CommentVoteDto commentVoteDto = CommentVoteDto.builder()
                 .id(commentVote.getId())
-                .siteUserDto(userService.siteUserToSiteUserForm(commentVote.getUser()))
+                .siteUserDto(userService.siteUserToSiteUserDto(commentVote.getUser()))
                 .commentDto(commentService.commentToCommentDto(commentVote.getComment()))
                 .build();
+
+        return commentVoteDto;
     }
 
 

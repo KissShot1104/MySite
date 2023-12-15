@@ -49,7 +49,7 @@ public class ArticleVoteServiceImpl implements ArticleVoteService {
     }
 
     private void createArticleVote(Article article, SiteUser user) {
-        ArticleVote articleVote = com.mysite.medium.article_vote.entity.ArticleVote.builder()
+        ArticleVote articleVote = ArticleVote.builder()
                 .article(article)
                 .user(user)
                 .build();
@@ -65,9 +65,11 @@ public class ArticleVoteServiceImpl implements ArticleVoteService {
     public List<ArticleVoteDto> findArticleVoterAllByArticleId(Long articleId) {
         List<ArticleVote> articleVote = articleVoteRepository.findAllByArticleId(articleId);
 
-        return articleVote.stream()
+        List<ArticleVoteDto> articleVoteDtoList = articleVote.stream()
                 .map(this::articleVoterToArticleVoterDto)
                 .toList();
+
+        return articleVoteDtoList;
     }
 
     @Transactional
@@ -76,11 +78,13 @@ public class ArticleVoteServiceImpl implements ArticleVoteService {
     }
 
     private ArticleVoteDto articleVoterToArticleVoterDto(ArticleVote articleVote) {
-        return ArticleVoteDto.builder()
+        ArticleVoteDto articleVoteDto = ArticleVoteDto.builder()
                 .id(articleVote.getId())
-                .siteUserDto(userService.siteUserToSiteUserForm(articleVote.getUser()))
+                .siteUserDto(userService.siteUserToSiteUserDto(articleVote.getUser()))
                 .articleDto(articleService.articleToArticleDto(articleVote.getArticle()))
                 .build();
+
+        return articleVoteDto;
     }
 
 }

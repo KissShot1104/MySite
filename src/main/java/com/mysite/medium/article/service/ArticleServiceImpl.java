@@ -50,7 +50,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional
     public void createArticle(final ArticleDto articleDto, final SiteUserDto siteUserDto) {
 
-        final SiteUser siteUser = userService.siteUserFormToSiteUser(siteUserDto);
+        final SiteUser siteUser = userService.siteUserDtoToSiteUser(siteUserDto);
 
         Article article = Article.builder()//수정 바람
                 .subject(articleDto.getSubject())
@@ -91,7 +91,7 @@ public class ArticleServiceImpl implements ArticleService {
                 .content(article.getContent())
                 .createDate(article.getCreateDate())
                 .modifyDate(article.getModifyDate())
-                .author(userService.siteUserToSiteUserForm(article.getAuthor()))
+                .author(userService.siteUserToSiteUserDto(article.getAuthor()))
                 .build();
 
         return articleDto;

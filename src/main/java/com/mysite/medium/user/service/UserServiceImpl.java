@@ -40,15 +40,12 @@ public class UserServiceImpl implements UserService {
             throw new DataNotFoundException("siteuser not found");
         }
 
-        return SiteUserDto.builder()
-                .id(siteUser.get().getId())
-                .password(siteUser.get().getPassword())
-                .username(siteUser.get().getUsername())
-                .email(siteUser.get().getEmail())
-                .build();
+        SiteUserDto siteUserDto = siteUserToSiteUserDto(siteUser.get());
+
+        return siteUserDto;
     }
 
-    public SiteUser siteUserFormToSiteUser(SiteUserDto siteUserDto) {
+    public SiteUser siteUserDtoToSiteUser(SiteUserDto siteUserDto) {
         return SiteUser.builder()
                 .id(siteUserDto.getId())
                 .username(siteUserDto.getUsername())
@@ -57,7 +54,7 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    public SiteUserDto siteUserToSiteUserForm(SiteUser siteUser) {
+    public SiteUserDto siteUserToSiteUserDto(SiteUser siteUser) {
         return SiteUserDto.builder()
                 .id(siteUser.getId())
                 .username(siteUser.getUsername())

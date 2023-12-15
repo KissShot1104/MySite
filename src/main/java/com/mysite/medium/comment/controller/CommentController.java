@@ -61,7 +61,7 @@ public class CommentController {
                                 @PathVariable("commentId") Long commentId,
                                 Principal principal) {
 
-        CommentDto existingComment = commentService.getComment(commentId);
+        CommentDto existingComment = commentService.findCommentByCommendId(commentId);
         if (!existingComment.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
@@ -82,7 +82,7 @@ public class CommentController {
             return "comment_form";
         }
 
-        CommentDto existingComment = commentService.getComment(commentId);
+        CommentDto existingComment = commentService.findCommentByCommendId(commentId);
         if (!existingComment.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
@@ -97,7 +97,7 @@ public class CommentController {
     @GetMapping("/delete/{commentId}")
     public String deleteComment(Principal principal,
                                 @PathVariable("commentId") Long commentId) {
-        CommentDto commentDto = commentService.getComment(commentId);
+        CommentDto commentDto = commentService.findCommentByCommendId(commentId);
         if (!commentDto.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
