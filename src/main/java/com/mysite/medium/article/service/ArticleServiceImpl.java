@@ -29,30 +29,23 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
     private final UserService userService;
 
-    public Page<ArticleDto> getArticleAll(int page, String kw) {
+    public Page<ArticleDto> getArticleAll(final int page, final String kw) {
     	List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return this.articleRepository.findAllByKeyword(kw, pageable);
     }
 
-    public ArticleDto findArticleByArticleId(Long id) {
-        Optional<Article> article = this.articleRepository.findById(id);
+    public ArticleDto findArticleByArticleId(final Long id) {
+        final Optional<Article> article = this.articleRepository.findById(id);
 
         if (article.isEmpty()) {
             throw new DataNotFoundException("article not found");
         }
 
-        SiteUserDto authorForm = userService.siteUserToSiteUserForm(article.get().getAuthor());
+        final ArticleDto articleDto = articleToArticleDto(article.get());
 
-        return ArticleDto.builder()
-                .id(article.get().getId())
-                .subject(article.get().getSubject())
-                .content(article.get().getContent())
-                .author(authorForm)
-                .createDate(article.get().getCreateDate())
-                .modifyDate(article.get().getModifyDate())
-                .build();
+        return articleDto;
     }
 
     @Transactional
