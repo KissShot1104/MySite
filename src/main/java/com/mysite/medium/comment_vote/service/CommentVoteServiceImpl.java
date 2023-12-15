@@ -30,11 +30,10 @@ public class CommentVoteServiceImpl implements CommentVoteService {
     private final UserRepository userRepository;
 
     private final UserService userService;
-    private final ArticleService articleService;
     private final CommentService commentService;
 
     @Transactional
-    public void createCommentVote(final Long commentId, final String username) {
+    public void toggleCommentVote(final Long commentId, final String username) {
         Optional<Comment> comment = commentRepository.findById(commentId);
         if (comment.isEmpty()) {
             throw new EntityNotFoundException("Comment Entity Not Found");
@@ -45,14 +44,19 @@ public class CommentVoteServiceImpl implements CommentVoteService {
             throw new EntityNotFoundException("User Entity Not Found");
         }
 
-        if (isDuplicateRecommendationVoter(commentId, user.get().getId())) {
-            throw new IllegalArgumentException("Duplicate Vote Comment");
+        Optional<CommentVote> commentVote = commentVoteRepository.findByCommentIdAndUserId(commentId, user.get().getId());
+        if (commentVote.isEmpty()) {
+            createCommentVote(comment.get(), user.get());
+        } else {
+            deleteCommentVoteAllByCommentId(commentId);
         }
+    }
 
+    public void createCommentVote(final Comment comment, final SiteUser user) {
         CommentVote commentVote = CommentVote.builder()
-                .article(comment.get().getArticle())
-                .comment(comment.get())
-                .user(user.get())
+                .article(comment.getArticle())
+                .comment(comment)
+                .user(user)
                 .build();
 
         commentVoteRepository.save(commentVote);
@@ -86,12 +90,6 @@ public class CommentVoteServiceImpl implements CommentVoteService {
                 .siteUserDto(userService.siteUserToSiteUserForm(commentVote.getUser()))
                 .commentDto(commentService.commentToCommentDto(commentVote.getComment()))
                 .build();
-    }
-
-    private boolean isDuplicateRecommendationVoter(final Long commentId, final Long userId) {
-
-        Optional<CommentVote> commentVote = commentVoteRepository.findByCommentIdAndUserId(commentId, userId);
-        return commentVote.isPresent();
     }
 
 
