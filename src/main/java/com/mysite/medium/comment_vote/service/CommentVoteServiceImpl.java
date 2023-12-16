@@ -3,6 +3,7 @@ package com.mysite.medium.comment_vote.service;
 
 import com.mysite.medium.article.service.ArticleService;
 import com.mysite.medium.comment.dto.CommentDto;
+import com.mysite.medium.comment.dto.CommentMapper;
 import com.mysite.medium.comment.entity.Comment;
 import com.mysite.medium.comment.repository.CommentRepository;
 import com.mysite.medium.comment.service.CommentService;
@@ -31,6 +32,7 @@ public class CommentVoteServiceImpl implements CommentVoteService {
 
     private final UserService userService;
     private final CommentService commentService;
+    private final CommentMapper commentMapper;
 
     @Transactional
     public void toggleCommentVote(final Long commentId, final String username) {
@@ -78,7 +80,7 @@ public class CommentVoteServiceImpl implements CommentVoteService {
         final Map<Long, Long> commentDtoLikes = new HashMap<>();
         for (Comment comment: comments) {
             final Long voteCount = commentVoteRepository.countByCommentId(comment.getId());
-            final CommentDto commentDto = commentService.commentToCommentDto(comment);
+            final CommentDto commentDto = commentMapper.commentToCommentDto(comment);
             commentDtoLikes.put(commentDto.getId(), voteCount);
         }
         return commentDtoLikes;
@@ -89,7 +91,7 @@ public class CommentVoteServiceImpl implements CommentVoteService {
         final CommentVoteDto commentVoteDto = CommentVoteDto.builder()
                 .id(commentVote.getId())
                 .siteUserDto(userService.siteUserToSiteUserDto(commentVote.getUser()))
-                .commentDto(commentService.commentToCommentDto(commentVote.getComment()))
+                .commentDto(commentMapper.commentToCommentDto(commentVote.getComment()))
                 .build();
 
         return commentVoteDto;

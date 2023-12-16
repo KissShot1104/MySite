@@ -19,7 +19,7 @@ public interface CommentService {
 
     void deleteAllByArticleId(final Long articleId);
 
-    Comment commentDtoToComment(final CommentDto commentDto);
-
-    CommentDto commentToCommentDto(final Comment comment);
+//    Comment commentDtoToComment(final CommentDto commentDto);
+//
+//    CommentDto commentToCommentDto(final Comment comment);
 }

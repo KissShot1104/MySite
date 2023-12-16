@@ -1,6 +1,7 @@
 package com.mysite.medium.comment.service;
 
 import com.mysite.medium.comment.dto.CommentDto;
+import com.mysite.medium.comment.dto.CommentMapper;
 import com.mysite.medium.comment.entity.Comment;
 import com.mysite.medium.comment.repository.CommentRepository;
 import com.mysite.medium.user.dto.SiteUserDto;
@@ -31,6 +32,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
     private final UserService userService;
+    private final CommentMapper commentMapper;
 
     public Page<CommentDto> findCommentAllByArticleId(final int page, final Long id) {
         final List<Order> sorts = new ArrayList<>();
@@ -63,7 +65,7 @@ public class CommentServiceImpl implements CommentService {
             throw new DataNotFoundException("comment not found");
         }
 
-        return commentToCommentDto(comment.get());
+        return commentMapper.commentToCommentDto(comment.get());
     }
 
     @Transactional
@@ -94,33 +96,33 @@ public class CommentServiceImpl implements CommentService {
         this.commentRepository.deleteAllByArticleId(articleId);
     }
 
-    public Comment commentDtoToComment(final CommentDto commentDto) {
-        final SiteUser author = userService.siteUserDtoToSiteUser(commentDto.getAuthor());
-
-        final Comment comment = Comment.builder()
-                .id(commentDto.getId())
-                .content(commentDto.getContent())
-                .article(commentDto.getArticle())
-                .author(author)
-                .build();
-
-        return comment;
-    }
-
-    public CommentDto commentToCommentDto(final Comment comment) {
-
-        final SiteUserDto author = userService.siteUserToSiteUserDto(comment.getAuthor());
-
-        final CommentDto commentDto = CommentDto.builder()
-                .id(comment.getId())
-                .content(comment.getContent())
-                .article(comment.getArticle())
-                .createDate(comment.getCreateDate())
-                .modifyDate(comment.getModifyDate())
-                .author(author)
-                .build();
-
-        return commentDto;
-    }
+//    public Comment commentDtoToComment(final CommentDto commentDto) {
+//        final SiteUser author = userService.siteUserDtoToSiteUser(commentDto.getAuthor());
+//
+//        final Comment comment = Comment.builder()
+//                .id(commentDto.getId())
+//                .content(commentDto.getContent())
+//                .article(commentDto.getArticle())
+//                .author(author)
+//                .build();
+//
+//        return comment;
+//    }
+//
+//    public CommentDto commentToCommentDto(final Comment comment) {
+//
+//        final SiteUserDto author = userService.siteUserToSiteUserDto(comment.getAuthor());
+//
+//        final CommentDto commentDto = CommentDto.builder()
+//                .id(comment.getId())
+//                .content(comment.getContent())
+//                .article(comment.getArticle())
+//                .createDate(comment.getCreateDate())
+//                .modifyDate(comment.getModifyDate())
+//                .author(author)
+//                .build();
+//
+//        return commentDto;
+//    }
 
 }
