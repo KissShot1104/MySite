@@ -1,5 +1,6 @@
 package com.mysite.medium.article_vote.service;
 
+import com.mysite.medium.article.dto.ArticleMapper;
 import com.mysite.medium.article.entity.Article;
 import com.mysite.medium.article.repository.ArticleRepository;
 import com.mysite.medium.article.service.ArticleService;
@@ -24,8 +25,9 @@ public class ArticleVoteServiceImpl implements ArticleVoteService {
     private final ArticleVoteRepository articleVoteRepository;
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
-    private final ArticleService articleService;
+
     private final UserService userService;
+    private final ArticleMapper articleMapper;
 
 
     @Transactional
@@ -81,7 +83,7 @@ public class ArticleVoteServiceImpl implements ArticleVoteService {
         final ArticleVoteDto articleVoteDto = ArticleVoteDto.builder()
                 .id(articleVote.getId())
                 .siteUserDto(userService.siteUserToSiteUserDto(articleVote.getUser()))
-                .articleDto(articleService.articleToArticleDto(articleVote.getArticle()))
+                .articleDto(articleMapper.articleToArticleDto(articleVote.getArticle()))
                 .build();
 
         return articleVoteDto;

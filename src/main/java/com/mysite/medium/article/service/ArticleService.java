@@ -17,6 +17,6 @@ public interface ArticleService {
 
     void deleteArticle(Long articleId);
 
-    ArticleDto articleToArticleDto(Article article);
+//    ArticleDto articleToArticleDto(Article article);
 
 }

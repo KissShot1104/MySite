@@ -1,5 +1,6 @@
 package com.mysite.medium.article.service;
 
+import com.mysite.medium.article.dto.ArticleMapper;
 import com.mysite.medium.article.entity.Article;
 import com.mysite.medium.article.dto.ArticleDto;
 import com.mysite.medium.article.repository.ArticleRepository;
@@ -27,6 +28,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
     private final UserService userService;
+    private final ArticleMapper articleMapper;
 
     public Page<ArticleDto> getArticleAll(final int page, final String kw) {
     	List<Sort.Order> sorts = new ArrayList<>();
@@ -42,7 +44,7 @@ public class ArticleServiceImpl implements ArticleService {
             throw new DataNotFoundException("article not found");
         }
 
-        final ArticleDto articleDto = articleToArticleDto(article.get());
+        final ArticleDto articleDto = articleMapper.articleToArticleDto(article.get());
 
         return articleDto;
     }
@@ -83,18 +85,18 @@ public class ArticleServiceImpl implements ArticleService {
 
         this.articleRepository.delete(article.get());
     }
-
-    public ArticleDto articleToArticleDto(final Article article) {
-        final ArticleDto articleDto = ArticleDto.builder()
-                .id(article.getId())
-                .subject(article.getSubject())
-                .content(article.getContent())
-                .createDate(article.getCreateDate())
-                .modifyDate(article.getModifyDate())
-                .author(userService.siteUserToSiteUserDto(article.getAuthor()))
-                .build();
-
-        return articleDto;
-    }
+//
+//    public ArticleDto articleToArticleDto(final Article article) {
+//        final ArticleDto articleDto = ArticleDto.builder()
+//                .id(article.getId())
+//                .subject(article.getSubject())
+//                .content(article.getContent())
+//                .createDate(article.getCreateDate())
+//                .modifyDate(article.getModifyDate())
+//                .author(userService.siteUserToSiteUserDto(article.getAuthor()))
+//                .build();
+//
+//        return articleDto;
+//    }
 
 }
