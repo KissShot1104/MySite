@@ -5,6 +5,7 @@ import com.mysite.medium.article.entity.Article;
 import com.mysite.medium.article.repository.ArticleRepository;
 import com.mysite.medium.article.service.ArticleService;
 import com.mysite.medium.article_vote.dto.ArticleVoteDto;
+import com.mysite.medium.article_vote.dto.ArticleVoteMapper;
 import com.mysite.medium.article_vote.entity.ArticleVote;
 import com.mysite.medium.article_vote.repository.ArticleVoteRepository;
 import com.mysite.medium.user.entity.SiteUser;
@@ -28,6 +29,7 @@ public class ArticleVoteServiceImpl implements ArticleVoteService {
 
     private final UserService userService;
     private final ArticleMapper articleMapper;
+    private final ArticleVoteMapper articleVoteMapper;
 
 
     @Transactional
@@ -65,11 +67,9 @@ public class ArticleVoteServiceImpl implements ArticleVoteService {
 
 
     public List<ArticleVoteDto> findArticleVoterAllByArticleId(final Long articleId) {
-        final List<ArticleVote> articleVote = articleVoteRepository.findAllByArticleId(articleId);
+        final List<ArticleVote> articleVoteList = articleVoteRepository.findAllByArticleId(articleId);
 
-        final List<ArticleVoteDto> articleVoteDtoList = articleVote.stream()
-                .map(this::articleVoterToArticleVoterDto)
-                .toList();
+        final List<ArticleVoteDto> articleVoteDtoList = articleVoteMapper.articleVoteListToArticleVoteDtoList(articleVoteList);
 
         return articleVoteDtoList;
     }
@@ -77,16 +77,6 @@ public class ArticleVoteServiceImpl implements ArticleVoteService {
     @Transactional
     public void deleteArticleVoteAllByArticleId(final Long articleId) {
         articleVoteRepository.deleteAllByArticleId(articleId);
-    }
-
-    private ArticleVoteDto articleVoterToArticleVoterDto(final ArticleVote articleVote) {
-        final ArticleVoteDto articleVoteDto = ArticleVoteDto.builder()
-                .id(articleVote.getId())
-                .siteUserDto(userService.siteUserToSiteUserDto(articleVote.getUser()))
-                .articleDto(articleMapper.articleToArticleDto(articleVote.getArticle()))
-                .build();
-
-        return articleVoteDto;
     }
 
 }
