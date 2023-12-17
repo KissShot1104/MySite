@@ -3,7 +3,6 @@ package com.mysite.medium.article_vote.service;
 import com.mysite.medium.article.dto.ArticleMapper;
 import com.mysite.medium.article.entity.Article;
 import com.mysite.medium.article.repository.ArticleRepository;
-import com.mysite.medium.article.service.ArticleService;
 import com.mysite.medium.article_vote.dto.ArticleVoteDto;
 import com.mysite.medium.article_vote.dto.ArticleVoteMapper;
 import com.mysite.medium.article_vote.entity.ArticleVote;
@@ -44,7 +43,8 @@ public class ArticleVoteServiceImpl implements ArticleVoteService {
             throw new EntityNotFoundException("User Not Found Entity");
         }
 
-        final Optional<ArticleVote> articleVote = articleVoteRepository.findByArticleIdAndUserId(articleId, user.get().getId());
+        final Optional<ArticleVote> articleVote = articleVoteRepository.findByArticleIdAndUserId(articleId,
+                user.get().getId());
         if (articleVote.isEmpty()) {
             createArticleVote(article.get(), user.get());
         } else {
@@ -69,7 +69,8 @@ public class ArticleVoteServiceImpl implements ArticleVoteService {
     public List<ArticleVoteDto> findArticleVoterAllByArticleId(final Long articleId) {
         final List<ArticleVote> articleVoteList = articleVoteRepository.findAllByArticleId(articleId);
 
-        final List<ArticleVoteDto> articleVoteDtoList = articleVoteMapper.articleVoteListToArticleVoteDtoList(articleVoteList);
+        final List<ArticleVoteDto> articleVoteDtoList = articleVoteMapper.articleVoteListToArticleVoteDtoList(
+                articleVoteList);
 
         return articleVoteDtoList;
     }

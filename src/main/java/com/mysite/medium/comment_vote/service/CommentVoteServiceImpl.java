@@ -1,18 +1,14 @@
 package com.mysite.medium.comment_vote.service;
 
 
-import com.mysite.medium.article.service.ArticleService;
 import com.mysite.medium.comment.dto.CommentDto;
 import com.mysite.medium.comment.dto.CommentMapper;
 import com.mysite.medium.comment.entity.Comment;
 import com.mysite.medium.comment.repository.CommentRepository;
-import com.mysite.medium.comment.service.CommentService;
-import com.mysite.medium.comment_vote.dto.CommentVoteDto;
 import com.mysite.medium.comment_vote.entity.CommentVote;
 import com.mysite.medium.comment_vote.repository.CommentVoteRepository;
 import com.mysite.medium.user.entity.SiteUser;
 import com.mysite.medium.user.repository.UserRepository;
-import com.mysite.medium.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.List;
@@ -30,9 +26,8 @@ public class CommentVoteServiceImpl implements CommentVoteService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
 
-    private final UserService userService;
-    private final CommentService commentService;
     private final CommentMapper commentMapper;
+
 
     @Transactional
     public void toggleCommentVote(final Long commentId, final String username) {
@@ -46,7 +41,8 @@ public class CommentVoteServiceImpl implements CommentVoteService {
             throw new EntityNotFoundException("User Entity Not Found");
         }
 
-        final Optional<CommentVote> commentVote = commentVoteRepository.findByCommentIdAndUserId(commentId, user.get().getId());
+        final Optional<CommentVote> commentVote = commentVoteRepository.findByCommentIdAndUserId(commentId,
+                user.get().getId());
         if (commentVote.isEmpty()) {
             createCommentVote(comment.get(), user.get());
         } else {
@@ -73,28 +69,17 @@ public class CommentVoteServiceImpl implements CommentVoteService {
     public void deleteCommentVoteAllByArticleId(final Long articleId) {
         commentVoteRepository.deleteAllByArticleId(articleId);
     }
-    
+
 
     public Map<Long, Long> getCommentLikesForArticle(final Long articleId) {//article 생겼으니 다시 생각해보자
         final List<Comment> comments = commentRepository.findAllByArticleId(articleId);
         final Map<Long, Long> commentDtoLikes = new HashMap<>();
-        for (Comment comment: comments) {
+        for (Comment comment : comments) {
             final Long voteCount = commentVoteRepository.countByCommentId(comment.getId());
             final CommentDto commentDto = commentMapper.commentToCommentDto(comment);
             commentDtoLikes.put(commentDto.getId(), voteCount);
         }
         return commentDtoLikes;
-    }
-
-    public CommentVoteDto articleVoteToArticleVoteDto(final CommentVote commentVote) {
-
-        final CommentVoteDto commentVoteDto = CommentVoteDto.builder()
-                .id(commentVote.getId())
-                .siteUserDto(userService.siteUserToSiteUserDto(commentVote.getUser()))
-                .commentDto(commentMapper.commentToCommentDto(commentVote.getComment()))
-                .build();
-
-        return commentVoteDto;
     }
 
 

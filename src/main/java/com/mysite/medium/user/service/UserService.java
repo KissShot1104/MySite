@@ -10,7 +10,4 @@ public interface UserService {
 
     SiteUserDto getUser(final String username);
 
-    SiteUser siteUserDtoToSiteUser(final SiteUserDto siteUserDto);
-
-    SiteUserDto siteUserToSiteUserDto(final SiteUser siteUser);
 }
