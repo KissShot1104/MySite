@@ -1,4 +1,4 @@
-package com.mysite.medium;
+package com.mysite.medium.global;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class DateTime {
+public abstract class BaseEntity {
 
     @CreatedDate
     @Column(updatable = false)

@@ -1,6 +1,5 @@
 package com.mysite.medium.article_vote.service;
 
-import com.mysite.medium.article.dto.ArticleMapper;
 import com.mysite.medium.article.entity.Article;
 import com.mysite.medium.article.repository.ArticleRepository;
 import com.mysite.medium.article_vote.dto.ArticleVoteDto;
@@ -9,7 +8,6 @@ import com.mysite.medium.article_vote.entity.ArticleVote;
 import com.mysite.medium.article_vote.repository.ArticleVoteRepository;
 import com.mysite.medium.user.entity.SiteUser;
 import com.mysite.medium.user.repository.UserRepository;
-import com.mysite.medium.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -26,8 +24,6 @@ public class ArticleVoteServiceImpl implements ArticleVoteService {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
 
-    private final UserService userService;
-    private final ArticleMapper articleMapper;
     private final ArticleVoteMapper articleVoteMapper;
 
 

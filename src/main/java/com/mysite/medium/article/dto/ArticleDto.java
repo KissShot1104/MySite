@@ -11,10 +11,10 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-@Setter
 public class ArticleDto {
 
     Long id;
